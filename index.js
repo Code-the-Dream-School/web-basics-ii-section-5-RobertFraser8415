@@ -11,8 +11,14 @@
 //As our previous Battleship, the winner is the player that hits the 4 opponent's ships first
 //one more Thing create a 'reset' and a 'new game' buttons as childs of the element with the id 'buttons'. the reset button has to start the game again and the new game create a new game with new players and a new random board.
 
-let redPlayer = prompt("What is your name");
-let bluePlayer = prompt("What is your name?");
+window.localStorage.setItem("keepNames", "")
+
+function gameInit(){
+  const keepNames = window.localStorage.getItem("keepNames")
+let redPlayer = keepNames ? window.localStorage.getItem("player1Name") : prompt("What is your name");
+let bluePlayer = keepNames ? window.localStorage.getItem("player2Name") : prompt("What is your name?");
+window.localStorage.setItem("player1Name", redPlayer)
+window.localStorage.setItem("player2Name", bluePlayer)
 document.getElementById("name_player1").innerText = redPlayer;
 document.getElementById("name_player2").innerText = bluePlayer;
 
@@ -116,4 +122,27 @@ for (var x = 0; x < 4; x++) {
 
      board_Player2.appendChild(li); //adding each row into the board
 }
-            
+}
+gameInit(false, false);
+function removeAllChildNodes(parent) {
+  while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+  }
+}
+function clearBoards(){
+  removeAllChildNodes(document.getElementById('board_player1'))
+  removeAllChildNodes(document.getElementById('board_player2'))
+}
+function clearBoardsAndStartGame(){
+  clearBoards();
+  window.localStorage.setItem("keepNames", "")
+  gameInit();
+}
+function startNewGame(){
+  clearBoards();
+  window.localStorage.setItem("keepNames", "true")
+  gameInit();
+}
+document.querySelector("#reset").addEventListener('click', clearBoardsAndStartGame) 
+document.querySelector("#new-game").addEventListener('click', startNewGame)
+         
